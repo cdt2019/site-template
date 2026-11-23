@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+/* 深色模式由 <html data-theme="dark"> 控制（ThemeToggle 切换，首屏脚本防闪烁） */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------
+ * 设计令牌：暖纸色 + 墨黑 + 酸性青柠。换品牌色主要改这里。
+ * ------------------------------------------------------------------ */
+:root {
+  --paper: #f3f0e8;
+  --paper-2: #e9e5d9;
+  --card: #fbfaf6;
+  --ink: #15140f;
+  --ink-2: #4a473e;
+  --ink-3: #8a8577;
+  --line: #d8d3c5;
+  --accent: #c6f432;
+  --accent-ink: #15140f;
+  --signal: #ff5b2e;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --paper: #11100d;
+  --paper-2: #1a1915;
+  --card: #1b1a16;
+  --ink: #f0ece1;
+  --ink-2: #b3ae9f;
+  --ink-3: #7a7568;
+  --line: #2e2c26;
+  --accent: #c6f432;
+  --accent-ink: #11100d;
+  --signal: #ff6a3d;
+  color-scheme: dark;
+}
+
+/* 无 JS 时跟随系统 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --paper: #11100d;
+    --paper-2: #1a1915;
+    --card: #1b1a16;
+    --ink: #f0ece1;
+    --ink-2: #b3ae9f;
+    --ink-3: #7a7568;
+    --line: #2e2c26;
+    --accent-ink: #11100d;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-signal: var(--signal);
+
+  --font-sans: var(--font-geist-sans), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans SC", system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), "Songti SC", "Noto Serif SC", "STSong", Georgia,
+    serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-rise: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-x {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  /* 等宽小标签：01 — FEATURES */
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* 荧光笔高亮 */
+  .marker {
+    background-image: linear-gradient(transparent 58%, var(--accent) 58%, var(--accent) 92%, transparent 92%);
+    padding-inline: 0.08em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  :root[data-theme="dark"] .marker {
+    background-image: none;
+    color: var(--accent);
+  }
+
+  /* 点阵底纹（工作台背景） */
+  .dot-grid {
+    background-image: radial-gradient(var(--line) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+
+  /* 主按钮：墨黑实底 → 悬停变青柠 */
+  .btn-ink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.7rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      transform 0.2s;
+  }
+  .btn-ink:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn-ink:active {
+    transform: scale(0.97);
+  }
+
+  /* 次按钮：细线描边 */
+  .btn-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+    color: var(--ink-2);
+    transition:
+      border-color 0.2s,
+      color 0.2s,
+      background 0.2s;
+  }
+  .btn-line:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  /* 博客正文排版 */
+  .prose-ink {
+    font-size: 1.075rem;
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+  .prose-ink > * + * {
+    margin-top: 1.25em;
+  }
+  .prose-ink h2 {
+    margin-top: 2.2em;
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .prose-ink h3 {
+    margin-top: 1.8em;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .prose-ink a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 3px;
+  }
+  .prose-ink strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .prose-ink ul,
+  .prose-ink ol {
+    padding-left: 1.3em;
+  }
+  .prose-ink ul {
+    list-style: square;
+  }
+  .prose-ink ol {
+    list-style: decimal;
+  }
+  .prose-ink li + li {
+    margin-top: 0.4em;
+  }
+  .prose-ink li::marker {
+    color: var(--ink-3);
+  }
+  .prose-ink blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1.1em;
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .prose-ink code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--paper-2);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+  }
+  .prose-ink pre {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+  }
+  .prose-ink pre code {
+    background: none;
+    padding: 0;
+  }
+  .prose-ink table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  .prose-ink th,
+  .prose-ink td {
+    border-bottom: 1px solid var(--line);
+    padding: 0.6em 0.5em;
+    text-align: left;
+  }
+  .prose-ink th {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .prose-ink hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.btn-line:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}

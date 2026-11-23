@@ -1,0 +1,16 @@
+import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
+
+const nextConfig: NextConfig = {
+  pageExtensions: ["ts", "tsx", "md", "mdx"],
+  poweredByHeader: false,
+};
+
+const withMDX = createMDX({
+  options: {
+    // Turbopack 下插件需用字符串名
+    remarkPlugins: ["remark-gfm"],
+  },
+});
+
+export default withMDX(nextConfig);
